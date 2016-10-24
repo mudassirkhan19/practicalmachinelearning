@@ -130,8 +130,8 @@ $(document).ready(function () {
 </div>
 <div id="load-packages" class="section level2">
 <h2>Load Packages</h2>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
+<pre class="r"><code>library(data.table)
+library(caret)</code></pre>
 </div>
 <div id="load-data" class="section level2">
 <h2>Load Data</h2>
@@ -166,7 +166,7 @@ testing &lt;- testing[-1,]</code></pre>
 </div>
 <div id="model-building" class="section level2">
 <h2>Model Building</h2>
-<p>In order to get a highly accurate model, I considered using random forests right off the bat. I will be using a 3 fold cross validation to check the stability of the model.</p>
+<p>In order to get a highly accurate model, I considered using random forests right off the bat. I will be using a 5 fold cross validation to check the stability of the model.</p>
 <pre class="r"><code>set.seed(13557)
 train_control &lt;- trainControl(method = &quot;cv&quot;, number = 5)
 modRF_cv &lt;- train(classe ~ ., data = training, trControl = train_control, method = &quot;rf&quot;)</code></pre>

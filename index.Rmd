@@ -17,7 +17,7 @@ In this project, we will be to use data from accelerometers on the belt, forearm
 
 ## Load Packages
 
-```{r , echo=FALSE}
+```{r, message=FALSE}
 library(data.table)
 library(caret)
 ```
@@ -80,7 +80,7 @@ testing <- testing[-1,]
 
 In order to get a highly accurate model, I considered using random forests right off the bat. I will be using a 5 fold cross validation to check the stability of the model.
 
-```{r}
+```{r , cache=TRUE}
 set.seed(13557)
 train_control <- trainControl(method = "cv", number = 5)
 modRF_cv <- train(classe ~ ., data = training, trControl = train_control, method = "rf")
