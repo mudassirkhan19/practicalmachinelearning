@@ -78,7 +78,7 @@ testing <- testing[-1,]
 
 ## Model Building
 
-In order to get a highly accurate model, I considered using random forests right off the bat. I will be using a 3 fold cross validation to check the stability of the model.
+In order to get a highly accurate model, I considered using random forests right off the bat. I will be using a 5 fold cross validation to check the stability of the model.
 
 ```{r}
 set.seed(13557)
