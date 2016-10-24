@@ -1,0 +1,92 @@
+---
+title: "Human Activity Recognition - Machine Learning Project"
+author: "Muhammad Mudassir Khan"
+date: "October 24, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Packages
+
+```{r , echo=FALSE}
+library(data.table)
+library(caret)
+```
+
+
+## Load Data
+
+```{r}
+set.seed(13557)
+training <- fread("pml-training.csv", na.strings=c("NA","#DIV/0!",""))
+testing <- fread("pml-testing.csv", na.strings=c("NA","#DIV/0!",""))
+```
+
+## Clean Data
+
+Removing NonZeroVariance Variable as they dont contribute much to the model buiding process.
+
+```{r}
+nzv <- nearZeroVar(training, saveMetrics=TRUE)
+training <- training[,nzv$nzv==FALSE, with = F]
+```
+
+Removing the first variable of training set.
+
+```{r}
+training[, V1 := NULL]
+```
+
+Removing variables with more than 70% NA's
+
+```{r}
+index <- apply(training, 2, function(x) {ifelse(sum(is.na(x))/nrow(training)<0.7, 1, 0)} )
+training <- training[, index == 1, with = FALSE]
+```
+
+Subsetting the test data to keep only the selected variables.
+
+```{r}
+colname <- colnames(training[, -58, with = FALSE])
+testing <- testing[, colname, with = FALSE]
+```
+
+
+In order to ensure proper functioning of Decision Trees and especially RandomForest Algorithm with the Test data set (data set provided), we need to coerce the data into the same type.
+
+```{r , warning=FALSE}
+for (i in 1:length(testing) ) {
+        for(j in 1:length(training)) {
+        if( length( grep(names(training[i]), names(testing)[j]) ) ==1)  {
+            class(testing[j]) <- class(training[i])
+        }      
+    }      
+}
+#And to make sure Coercion really worked, simple smart ass technique:
+testing <- rbind(training[2, -58, with = FALSE] , testing) #note row 2 does not mean anything, this will be removed right.. now:
+testing <- testing[-1,]
+```
+
+## Model Building
+
+In order to get a highly accurate model, I considered using random forests right off the bat. I will be using a 3 fold cross validation to check the stability of the model.
+
+```{r}
+set.seed(13557)
+train_control <- trainControl(method = "cv", number = 5)
+modRF_cv <- train(classe ~ ., data = training, trControl = train_control, method = "rf")
+print(modRF_cv)
+```
+
+## Predicting Results
+
+Random Forests gave an Accuracy in the CV training dataset of 99.99643%, which is quite accurate. The expected out-of-sample error is 100-99.99643 = 0.0004%.
+
+```{r}
+prediction <- predict(modRF_cv, testing)
+prediction
+```
+
