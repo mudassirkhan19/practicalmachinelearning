@@ -131,7 +131,8 @@ $(document).ready(function () {
 <div id="load-packages" class="section level2">
 <h2>Load Packages</h2>
 <pre class="r"><code>library(data.table)
-library(caret)</code></pre>
+library(caret)
+library(randomForest)</code></pre>
 </div>
 <div id="load-data" class="section level2">
 <h2>Load Data</h2>
@@ -168,17 +169,9 @@ testing &lt;- testing[-1,]</code></pre>
 <h2>Model Building</h2>
 <p>In order to get a highly accurate model, I considered using random forests right off the bat. I will be using a 5 fold cross validation to check the stability of the model.</p>
 <pre class="r"><code>set.seed(13557)
-train_control &lt;- trainControl(method = &quot;cv&quot;, number = 5)
-modRF_cv &lt;- train(classe ~ ., data = training, trControl = train_control, method = &quot;rf&quot;)</code></pre>
-<pre><code>## Loading required package: randomForest</code></pre>
-<pre><code>## randomForest 4.6-12</code></pre>
-<pre><code>## Type rfNews() to see new features/changes/bug fixes.</code></pre>
-<pre><code>## 
-## Attaching package: 'randomForest'</code></pre>
-<pre><code>## The following object is masked from 'package:ggplot2':
-## 
-##     margin</code></pre>
-<pre class="r"><code>print(modRF_cv)</code></pre>
+train_control &lt;- trainControl(method = &quot;cv&quot;, number = 5) #set CV parameters
+modRF_cv &lt;- train(classe ~ ., data = training, trControl = train_control, method = &quot;rf&quot;)
+print(modRF_cv)</code></pre>
 <pre><code>## Random Forest 
 ## 
 ## 19622 samples

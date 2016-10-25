@@ -20,6 +20,7 @@ In this project, we will be to use data from accelerometers on the belt, forearm
 ```{r, message=FALSE}
 library(data.table)
 library(caret)
+library(randomForest)
 ```
 
 
@@ -82,7 +83,7 @@ In order to get a highly accurate model, I considered using random forests right
 
 ```{r , cache=TRUE}
 set.seed(13557)
-train_control <- trainControl(method = "cv", number = 5)
+train_control <- trainControl(method = "cv", number = 5) #set CV parameters
 modRF_cv <- train(classe ~ ., data = training, trControl = train_control, method = "rf")
 print(modRF_cv)
 ```
